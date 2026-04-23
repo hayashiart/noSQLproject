@@ -11,7 +11,7 @@ app = FastAPI(title="Gestion Profils Utilisateurs")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# ====================== CRUD ======================
+# CRUD 
 
 @app.post("/users")
 async def create_user(user: dict):
@@ -52,7 +52,7 @@ async def get_user(user_id: str):
 
 
 
-# ====================== FRONTEND ======================
+# FRONTEND
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
