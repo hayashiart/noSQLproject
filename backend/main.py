@@ -11,7 +11,7 @@ app = FastAPI(title="Gestion Profils Utilisateurs")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# CRUD 
+#  CRUD 
 
 @app.post("/users")
 async def create_user(user: dict):
@@ -31,8 +31,8 @@ async def create_user(user: dict):
 async def get_all_users():
     """Récupérer tous les utilisateurs"""
     users = list(users_collection.find())
-    for u in users:
-        u["id"] = str(u.pop("_id"))
+    for user in users:
+        user["id"] = str(user.pop("_id"))
     return users
 
 
@@ -51,8 +51,20 @@ async def get_user(user_id: str):
     return user
 
 
+@app.delete("/users/{user_id}")
+async def delete_user(user_id: str):
+    """Supprimer un utilisateur"""
+    obj_id = ObjectId(user_id)
 
-# FRONTEND
+    result = users_collection.delete_one({"_id": obj_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+    
+    return {"message": "Utilisateur supprimé avec succès"}
+
+
+
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
